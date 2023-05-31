@@ -68,12 +68,16 @@ class Entrance extends StatelessWidget {
               ],
             ),
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const take_pictures.HomePage()),
-                );
+              onPressed: () async {
+                await FirebaseAuth.instance.signInAnonymously();
+                print("Signed in with temporary account.");
+                if (context.mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const take_pictures.HomePage()),
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
