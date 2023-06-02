@@ -1,5 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'camera.dart' as camera;
+
+import 'package:firebase_storage/firebase_storage.dart';
+
+import 'package:camera/camera.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
