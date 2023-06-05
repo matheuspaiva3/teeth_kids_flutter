@@ -1,25 +1,26 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'maps.dart';
 
-class ListaDentistas extends StatefulWidget {
-  const ListaDentistas({super.key});
+class DentistsList extends StatefulWidget {
+  const DentistsList({super.key});
 
   @override
-  State<ListaDentistas> createState() => _ListaDentistasState();
+  State<DentistsList> createState() => _DentistsListState();
 }
 
-class _ListaDentistasState extends State<ListaDentistas> {
+class _DentistsListState extends State<DentistsList> {
   final _userStream =
       FirebaseFirestore.instance.collection('users').snapshots();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFacbeff),
+      backgroundColor: const Color(0xFFacbeff),
       appBar: AppBar(
-        backgroundColor: Color(0xFF6153ff),
+        backgroundColor: const Color(0xFF6153ff),
         centerTitle: true,
-        title: Text('Dentistas disponíveis'),
+        title: const Text('Dentistas disponíveis'),
       ),
       body: StreamBuilder(
         stream: _userStream,
@@ -38,12 +39,17 @@ class _ListaDentistasState extends State<ListaDentistas> {
               itemCount: docs.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  leading: Icon(Icons.person),
+                  leading: const Icon(Icons.person),
                   title: Text(docs[index]['name']),
                   trailing: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Map()));
+                      },
                       icon: const Icon(
                         Icons.check,
                         color: Colors.white,

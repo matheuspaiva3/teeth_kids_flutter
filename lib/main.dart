@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'take_pictures.dart' as take_pictures;
-
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'take_pictures.dart' as take_pictures;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,7 +69,6 @@ class Entrance extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 await FirebaseAuth.instance.signInAnonymously();
-                print("Signed in with temporary account.");
                 if (context.mounted) {
                   Navigator.push(
                     context,

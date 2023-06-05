@@ -1,12 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:camera/camera.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
-import 'package:teeth_kids_flutter/lista_dentistas.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:teeth_kids_flutter/dentists_list.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -47,7 +46,7 @@ class HomePage extends StatelessWidget {
                 ),
                 Column(children: [
                   const Text(
-                    'Tire 3 fotos da boca fudida da criança',
+                    'Tire 3 fotos da boca da criança',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.black,
@@ -124,9 +123,12 @@ class HomePage extends StatelessWidget {
                 alignment: Alignment.bottomCenter,
                 child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute
-                        (builder: (_) => ListaDentistas()));
-                    }, child: const Text('Continuar'))),
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const DentistsList()));
+                    },
+                    child: const Text('Acionar emergência'))),
           )
         ],
       ),
@@ -219,7 +221,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               ),
             );
           } catch (e) {
-            // If an error occurs, log the error to the console.
             print(e);
           }
         },
@@ -259,15 +260,8 @@ class DisplayPictureScreen extends StatelessWidget {
     File imageFile = File(imagePath);
     String fileName = path.basename(imageFile.path);
     try {
-      TaskSnapshot snapshot = await storage
-          .ref()
-          .child('users/$userId/$fileName')
-          .putFile(imageFile);
-      String downloadUrl = await snapshot.ref.getDownloadURL();
-      // Do something with the download URL if needed
-      print('Image uploaded to Firebase Storage: $downloadUrl');
+      await storage.ref().child('users/$userId/$fileName').putFile(imageFile);
     } catch (e) {
-      // Handle the error
       print(e.toString());
     }
   }

@@ -51,5 +51,20 @@
     <string>Este aplicativo necessita da câmera para tirar fotos.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Este aplicativo necessita do microfone para nada.</string>
+    <key>io.flutter.embedded_views_preview</key>
+    <true/>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Your location is required to show nearby places.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Your location is required to show nearby places.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Your location is required to show nearby places.</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <true/>
+    </dict>
+    <key>GMSApiKey</key>
+    <string>YAIzaSyCmCzkrUjmN9jlv5jz7nP5hztJA5txvNR4</string>
 </dict>
 </plist>
