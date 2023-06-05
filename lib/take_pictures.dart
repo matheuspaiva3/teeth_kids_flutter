@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:teeth_kids_flutter/lista_dentistas.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -122,7 +123,10 @@ class HomePage extends StatelessWidget {
             child: Align(
                 alignment: Alignment.bottomCenter,
                 child: ElevatedButton(
-                    onPressed: () {}, child: const Text('Continuar'))),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute
+                        (builder: (_) => ListaDentistas()));
+                    }, child: const Text('Continuar'))),
           )
         ],
       ),
