@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
+import 'ratings.dart';
 
 class Map extends StatefulWidget {
   final String dentistID;
@@ -26,8 +27,7 @@ class _MapState extends State<Map> {
 
   Future<void> fetchDentistLocations() async {
     // Retrieve the dentist document from Firestore using the dentistID
-    DocumentSnapshot snapshot =
-    await FirebaseFirestore.instance
+    DocumentSnapshot snapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(widget.dentistID)
         .get();
@@ -65,6 +65,10 @@ class _MapState extends State<Map> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFF6153ff),
+        title: Text('Mapa'),
+      ),
       body: GoogleMap(
         mapType: MapType.normal,
         initialCameraPosition: const CameraPosition(
@@ -76,6 +80,20 @@ class _MapState extends State<Map> {
           _controller.complete(controller);
         },
       ),
+      floatingActionButton: Align(
+        alignment: Alignment.bottomCenter,
+        child: FloatingActionButton(
+          onPressed: _navigateToRatingsPage,
+          child: Icon(Icons.star),
+        ),
+      ),
+    );
+  }
+
+  void _navigateToRatingsPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Ratings(dentistID: widget.dentistID)),
     );
   }
 }
