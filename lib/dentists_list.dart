@@ -47,11 +47,19 @@ class _DentistsListState extends State<DentistsList> {
                   trailing: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Map()));
+                      onPressed: () async {
+                        if (docs[index]['email'] != null) {
+                          String? uid =
+                              await getUIDFromFirestore(docs[index]['email']);
+                          if (uid != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Map(dentistID: uid),
+                              ),
+                            );
+                          }
+                        }
                       },
                       icon: const Icon(
                         Icons.check,
@@ -65,4 +73,23 @@ class _DentistsListState extends State<DentistsList> {
       ),
     );
   }
+}
+
+Future<String?> getUIDFromFirestore(String email) async {
+  // Query the "users" collection in Firestore based on the email
+  final snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .where('email', isEqualTo: email)
+      .limit(1)
+      .get();
+
+  // Check if a matching document is found
+  if (snapshot.size > 0) {
+    // Retrieve the first document snapshot
+    final docSnapshot = snapshot.docs[0];
+
+    String uid = docSnapshot.id;
+    return uid;
+  }
+  return null;
 }
