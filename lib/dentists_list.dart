@@ -10,8 +10,11 @@ class DentistsList extends StatefulWidget {
 }
 
 class _DentistsListState extends State<DentistsList> {
-  final _userStream =
-      FirebaseFirestore.instance.collection('users').snapshots();
+  final _userStream = FirebaseFirestore.instance
+      .collection('users')
+      .where('isActive', isEqualTo: true)
+      .limit(5)
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
