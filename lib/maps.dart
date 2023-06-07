@@ -32,8 +32,7 @@ class _MapState extends State<Map> {
         .get();
 
     if (snapshot.exists) {
-      String address = snapshot.get('address1.address1') as String? ??
-          ''; // Provide a default value if the address is null
+      String address = snapshot.get('address1.address1') as String;
       addMarker(address);
     }
   }
