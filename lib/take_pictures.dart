@@ -248,6 +248,8 @@ class DisplayPictureScreen extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               uploadImageToFirebase();
+              Navigator.pop(context);
+              Navigator.pop(context);
             },
             child: const Text('Confirmar'),
           ),

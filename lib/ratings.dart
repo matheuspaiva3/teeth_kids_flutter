@@ -1,14 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Ratings extends StatefulWidget {
   final String dentistID;
 
-  Ratings({required this.dentistID});
+  const Ratings({super.key, required this.dentistID});
 
   @override
-  _RatingsState createState() => _RatingsState();
+  State<Ratings> createState() => _RatingsState();
 }
 
 class _RatingsState extends State<Ratings> {
@@ -88,7 +88,8 @@ class _RatingsState extends State<Ratings> {
                     onPressed: () => _rate(ratingValue),
                     icon: Icon(
                       Icons.star,
-                      color: _rating >= ratingValue ? Colors.yellow : Colors.grey,
+                      color:
+                          _rating >= ratingValue ? Colors.yellow : Colors.grey,
                     ),
                   );
                 }),
@@ -121,7 +122,9 @@ class _RatingsState extends State<Ratings> {
                     onPressed: () => _saveAppRating(ratingValue),
                     icon: Icon(
                       Icons.star,
-                      color: _appRating >= ratingValue ? Colors.yellow : Colors.grey,
+                      color: _appRating >= ratingValue
+                          ? Colors.yellow
+                          : Colors.grey,
                     ),
                   );
                 }),
@@ -142,10 +145,13 @@ class _RatingsState extends State<Ratings> {
               ),
               const SizedBox(height: 32.0),
               ElevatedButton(
-                onPressed: _rating > 0 && _comment.isNotEmpty && _appRating > 0 && _appComment.isNotEmpty
+                onPressed: _rating > 0 &&
+                        _comment.isNotEmpty &&
+                        _appRating > 0 &&
+                        _appComment.isNotEmpty
                     ? _sendRating
                     : null,
-                style: ElevatedButton.styleFrom(primary: Colors.blue),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 child: const Text(
                   'Enviar Avaliação',
                   style: TextStyle(color: Colors.white),

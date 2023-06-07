@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
@@ -33,7 +32,8 @@ class _MapState extends State<Map> {
         .get();
 
     if (snapshot.exists) {
-      String address = snapshot.get('address1.address1') as String;
+      String address = snapshot.get('address1.address1') as String? ??
+          ''; // Provide a default value if the address is null
       addMarker(address);
     }
   }
@@ -59,6 +59,9 @@ class _MapState extends State<Map> {
           ),
         );
       });
+      // Move the camera to the dentist's location
+      GoogleMapController controller = await _controller.future;
+      controller.animateCamera(CameraUpdate.newLatLngZoom(latLng, 15.0));
     }
   }
 
@@ -66,8 +69,8 @@ class _MapState extends State<Map> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF6153ff),
-        title: Text('Mapa'),
+        backgroundColor: const Color(0xFF6153ff),
+        title: const Text('Localização do dentista'),
       ),
       body: GoogleMap(
         mapType: MapType.normal,
@@ -84,7 +87,7 @@ class _MapState extends State<Map> {
         alignment: Alignment.bottomCenter,
         child: FloatingActionButton(
           onPressed: _navigateToRatingsPage,
-          child: Icon(Icons.star),
+          child: const Icon(Icons.star),
         ),
       ),
     );
@@ -93,7 +96,8 @@ class _MapState extends State<Map> {
   void _navigateToRatingsPage() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Ratings(dentistID: widget.dentistID)),
+      MaterialPageRoute(
+          builder: (context) => Ratings(dentistID: widget.dentistID)),
     );
   }
 }
