@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
@@ -7,8 +8,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:teeth_kids_flutter/dentists_list.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final TextEditingController _phoneNumberController = TextEditingController();
+
+  @override
+  void dispose() {
+    _phoneNumberController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,18 +132,62 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
-          SafeArea(
-            child: Align(
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 50),
+            child: SafeArea(
+              bottom: false,
+              child: Align(
                 alignment: Alignment.bottomCenter,
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextFormField(
+                      controller: _phoneNumberController,
+                      keyboardType: TextInputType.phone,
+                      decoration: const InputDecoration(
+                        labelText: 'Numero do Telefone',
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22, // Aumentar o tamanho da fonte
+                        ),
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        final String phoneNumber = _phoneNumberController.text;
+                        final String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+                        // Adicione o ID e o número de telefone à coleção 'emergency_requests'
+                        FirebaseFirestore.instance.collection('emergency_requests').add({
+                          'userId': userId,
+                          'phoneNumber': phoneNumber,
+                        }).then((value) {
+                          // Sucesso ao adicionar à coleção
+                          print('Dados adicionados com sucesso');
+                        }).catchError((error) {
+                          // Erro ao adicionar à coleção
+                          print('Erro ao adicionar dados: $error');
+                        });
+
+                        Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => const DentistsList()));
-                    },
-                    child: const Text('Acionar emergência'))),
+                          MaterialPageRoute(builder: (context) => const DentistsList()),
+                        );
+                      },
+                      child: const Text('Acionar emergência'),
+                    ),
+
+                  ],
+                ),
+              ),
+            ),
           )
+
+
+          ,
         ],
       ),
     );
@@ -139,9 +197,9 @@ class HomePage extends StatelessWidget {
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({
-    super.key,
+    Key? key,
     required this.camera,
-  });
+  }) : super(key: key);
 
   final CameraDescription camera;
 
@@ -236,7 +294,7 @@ class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
   final String? userId = FirebaseAuth.instance.currentUser?.uid;
 
-  DisplayPictureScreen({super.key, required this.imagePath});
+  DisplayPictureScreen({Key? key, required this.imagePath}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
