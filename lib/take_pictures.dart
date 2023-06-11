@@ -9,18 +9,20 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:teeth_kids_flutter/dentists_list.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   @override
   void dispose() {
     _phoneNumberController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
@@ -55,20 +57,16 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 200,
-                ),
+                const SizedBox(height: 60),
                 Column(children: [
                   const Text(
                     'Tire 3 fotos da boca da criança',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 20,
                       color: Colors.black,
                     ),
                   ),
-                  const SizedBox(
-                    height: 50,
-                  ),
+                  const SizedBox(height: 25),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -142,52 +140,70 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextFormField(
+                      controller: _nameController,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        labelText: 'Nome do solicitante',
+                        labelStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 20),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
                       controller: _phoneNumberController,
                       keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(
-                        labelText: 'Numero do Telefone',
-                        labelStyle: TextStyle(
+                      decoration: InputDecoration(
+                        labelText: 'Número do celular',
+                        labelStyle: const TextStyle(
                           color: Colors.white,
-                          fontSize: 22, // Aumentar o tamanho da fonte
+                          fontSize: 22,
                         ),
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 20),
                       ),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
+                        final String name = _nameController.text;
                         final String phoneNumber = _phoneNumberController.text;
-                        final String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+                        final String userId =
+                            FirebaseAuth.instance.currentUser?.uid ?? '';
 
-                        // Adicione o ID e o número de telefone à coleção 'emergency_requests'
-                        FirebaseFirestore.instance.collection('emergency_requests').add({
+                        FirebaseFirestore.instance
+                            .collection('emergency_requests')
+                            .add({
                           'userId': userId,
+                          'name': name,
                           'phoneNumber': phoneNumber,
                         }).then((value) {
-                          // Sucesso ao adicionar à coleção
-                          print('Dados adicionados com sucesso');
+                          print('Dados adicionados com sucesso!');
                         }).catchError((error) {
-                          // Erro ao adicionar à coleção
-                          print('Erro ao adicionar dados: $error');
+                          print('Erro ao adicionar os dados: $error');
                         });
-
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const DentistsList()),
+                          MaterialPageRoute(
+                              builder: (context) => const DentistsList()),
                         );
                       },
                       child: const Text('Acionar emergência'),
                     ),
-
                   ],
                 ),
               ),
             ),
-          )
-
-
-          ,
+          ),
         ],
       ),
     );
@@ -197,9 +213,9 @@ class _HomePageState extends State<HomePage> {
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({
-    Key? key,
+    super.key,
     required this.camera,
-  }) : super(key: key);
+  });
 
   final CameraDescription camera;
 
@@ -294,7 +310,7 @@ class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
   final String? userId = FirebaseAuth.instance.currentUser?.uid;
 
-  DisplayPictureScreen({Key? key, required this.imagePath}) : super(key: key);
+  DisplayPictureScreen({super.key, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
