@@ -37,7 +37,6 @@ class _DentistsListState extends State<DentistsList> {
           }
 
           var docs = snapshot.data!.docs;
-          //return Text('${docs.length}');
           return ListView.builder(
               itemCount: docs.length,
               itemBuilder: (context, index) {
@@ -45,28 +44,60 @@ class _DentistsListState extends State<DentistsList> {
                   leading: const Icon(Icons.person),
                   title: Text(docs[index]['name']),
                   trailing: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green),
-                      onPressed: () async {
-                        if (docs[index]['email'] != null) {
-                          String? uid =
-                              await getUIDFromFirestore(docs[index]['email']);
-                          if (uid != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Map(dentistID: uid),
-                              ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                    ),
+                    onPressed: () async {
+                      if (docs[index]['email'] != null) {
+                        String? uid =
+                            await getUIDFromFirestore(docs[index]['email']);
+                        if (uid != null) {
+                          if (context.mounted) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Aguardando resposta...'),
+                                  content: const Text(
+                                      'Se o dentista não aceitar dentro de 1 minuto ou cancelar,'
+                                      ' você receberá um aviso para escolher outro.'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Cancelar'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                Map(dentistID: uid),
+                                          ),
+                                        );
+                                      },
+                                      child: const Text('Prosseguir'),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                           }
                         }
-                      },
-                      icon: const Icon(
-                        Icons.check,
-                        color: Colors.white,
-                      ),
-                      label: const Text(
-                          style: TextStyle(color: Colors.white), 'Aceitar')),
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.check,
+                      color: Colors.white,
+                    ),
+                    label: const Text(
+                      'Aceitar',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 );
               });
         },

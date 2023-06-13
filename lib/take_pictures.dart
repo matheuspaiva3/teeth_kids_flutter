@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Container(
@@ -37,7 +38,7 @@ class _HomePageState extends State<HomePage> {
                 image: AssetImage(
                   'assets/images/take_pictures_pic.png',
                 ),
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
             ),
           ),
@@ -57,16 +58,19 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 60),
+                const SizedBox(height: 40),
                 Column(children: [
                   const Text(
-                    'Tire 3 fotos da boca da criança',
+                    'Nós vamos precisar de 3 fotos...\n'
+                    'Uma foto da boca da criança\n'
+                    'Uma foto do seu documento\n'
+                    'Uma foto junto da criança',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -131,76 +135,73 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 50),
-            child: SafeArea(
-              bottom: false,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextFormField(
-                      controller: _nameController,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        labelText: 'Nome do solicitante',
-                        labelStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.all(20),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextFormField(
+                    controller: _nameController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      labelText: 'Nome do solicitante',
+                      labelStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _phoneNumberController,
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        labelText: 'Número do celular',
-                        labelStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 20),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25),
                       ),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 20),
                     ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        final String name = _nameController.text;
-                        final String phoneNumber = _phoneNumberController.text;
-                        final String userId =
-                            FirebaseAuth.instance.currentUser?.uid ?? '';
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _phoneNumberController,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      labelText: 'Número do celular',
+                      labelStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 20),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      final String name = _nameController.text;
+                      final String phoneNumber = _phoneNumberController.text;
+                      final String userId =
+                          FirebaseAuth.instance.currentUser?.uid ?? '';
 
-                        FirebaseFirestore.instance
-                            .collection('emergency_requests')
-                            .add({
-                          'userId': userId,
-                          'name': name,
-                          'phoneNumber': phoneNumber,
-                        }).then((value) {
-                          print('Dados adicionados com sucesso!');
-                        }).catchError((error) {
-                          print('Erro ao adicionar os dados: $error');
-                        });
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const DentistsList()),
-                        );
-                      },
-                      child: const Text('Acionar emergência'),
-                    ),
-                  ],
-                ),
+                      FirebaseFirestore.instance
+                          .collection('emergency_requests')
+                          .add({
+                        'userId': userId,
+                        'name': name,
+                        'phoneNumber': phoneNumber,
+                      }).then((value) {
+                        print('Dados adicionados com sucesso!');
+                      }).catchError((error) {
+                        print('Erro ao adicionar os dados: $error');
+                      });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const DentistsList()),
+                      );
+                    },
+                    child: const Text('Acionar emergência'),
+                  ),
+                ],
               ),
             ),
           ),

@@ -60,7 +60,7 @@ class _RatingsState extends State<Ratings> {
 
     // Voltar para a página inicial
     await FirebaseAuth.instance.signOut();
-    Navigator.popUntil(context, (route) => route.isFirst);
+    if (context.mounted) Navigator.popUntil(context, (route) => route.isFirst);
   }
 
   @override
