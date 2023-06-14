@@ -71,64 +71,23 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.add_a_photo,
-                          size: 80,
-                        ),
-                        onPressed: () async {
-                          final cameras = await availableCameras();
-                          final firstCamera = cameras.first;
-                          if (context.mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      TakePictureScreen(camera: firstCamera)),
-                            );
-                          }
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.add_a_photo,
-                          size: 80,
-                        ),
-                        onPressed: () async {
-                          final cameras = await availableCameras();
-                          final firstCamera = cameras.first;
-                          if (context.mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      TakePictureScreen(camera: firstCamera)),
-                            );
-                          }
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.add_a_photo,
-                          size: 80,
-                        ),
-                        onPressed: () async {
-                          final cameras = await availableCameras();
-                          final firstCamera = cameras.first;
-                          if (context.mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      TakePictureScreen(camera: firstCamera)),
-                            );
-                          }
-                        },
-                      ),
-                    ],
+                  IconButton(
+                    icon: const Icon(
+                      Icons.add_a_photo,
+                      size: 80,
+                    ),
+                    onPressed: () async {
+                      final cameras = await availableCameras();
+                      final firstCamera = cameras.first;
+                      if (context.mounted) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  TakePictureScreen(camera: firstCamera)),
+                        );
+                      }
+                    },
                   ),
                 ]),
               ],
@@ -188,10 +147,6 @@ class _HomePageState extends State<HomePage> {
                         'userId': userId,
                         'name': name,
                         'phoneNumber': phoneNumber,
-                      }).then((value) {
-                        print('Dados adicionados com sucesso!');
-                      }).catchError((error) {
-                        print('Erro ao adicionar os dados: $error');
                       });
                       Navigator.push(
                         context,
@@ -246,7 +201,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   @override
   void dispose() {
-    // Dispose of the controller when the widget is disposed.
     _controller.dispose();
     super.dispose();
   }
@@ -322,6 +276,12 @@ class DisplayPictureScreen extends StatelessWidget {
           Image.file(File(imagePath)),
           ElevatedButton(
             onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Tentar de novo'),
+          ),
+          ElevatedButton(
+            onPressed: () {
               uploadImageToFirebase();
               Navigator.pop(context);
               Navigator.pop(context);
@@ -336,10 +296,6 @@ class DisplayPictureScreen extends StatelessWidget {
   Future<void> uploadImageToFirebase() async {
     File imageFile = File(imagePath);
     String fileName = path.basename(imageFile.path);
-    try {
-      await storage.ref().child('users/$userId/$fileName').putFile(imageFile);
-    } catch (e) {
-      print(e.toString());
-    }
+    await storage.ref().child('users/$userId/$fileName').putFile(imageFile);
   }
 }
