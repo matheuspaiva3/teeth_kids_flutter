@@ -18,11 +18,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
 
   @override
   void dispose() {
     _phoneNumberController.dispose();
     _nameController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -118,6 +120,23 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
+                    controller: _addressController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      labelText: 'Endereço do solicitante',
+                      labelStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 20),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
                     controller: _phoneNumberController,
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
@@ -137,6 +156,7 @@ class _HomePageState extends State<HomePage> {
                   ElevatedButton(
                     onPressed: () {
                       final String name = _nameController.text;
+                      final String addressNumber = _addressController.text;
                       final String phoneNumber = _phoneNumberController.text;
                       final String userId =
                           FirebaseAuth.instance.currentUser?.uid ?? '';
@@ -146,6 +166,7 @@ class _HomePageState extends State<HomePage> {
                           .add({
                         'userId': userId,
                         'name': name,
+                        'address': addressNumber,
                         'phoneNumber': phoneNumber,
                       });
                       Navigator.push(
